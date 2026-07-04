@@ -1,0 +1,57 @@
+log_base_dir: ./logs
+to_log_file: True
+to_stdout: True
+TB_dir: False
+checkpoints: ./checkpoints
+log_level: INFO
+model_name: AirDDE
+
+data:
+  batch_size: 64
+  interval: '3h'
+  data_name: KnowAir
+  root_path: ./datasets/KnowAir
+  num_workers: 0
+  normalized_columns: [ 0, 1, 2, 3, 4, 5 ]
+  embed: 0
+
+model:
+  seq_len: 24
+  horizon: 24
+  input_dim: 6
+  embed_dim: 6
+  X_dim: 1
+
+  embedding:
+    hour2day: 4
+    day2week: 3
+    day2month: 4
+    month2year: 3
+    station: 4
+
+  decoder:
+    enable: True
+
+  loss:
+    kl_loss: False
+    recon_loss: False
+    pred_loss: True
+    cl_loss: True
+    cl_coeff: 5
+    criterion: mae
+
+train:
+  lr: 0.005
+  lradj: 'default'
+  epochs: 100
+  pct_start: 0.4
+  patience: 3
+  steps: [20, 30, 40, 50]
+  lr_decay_ratio: 0.1
+  log_every: 1
+
+GPU:
+  use_gpu: True
+  gpu: 0
+  use_multi_gpu: False
+  devices: '0, 1, 2, 3'
